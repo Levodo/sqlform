@@ -167,3 +167,15 @@ order by col1 asc, col2 asc;
   from recent_grads
   where (Major_category != 'Engineering') and (Median <= 50000 or Unemployment_rate > 0.065)
   ;
+
+/*
+    Trier les résultats
+  Retourner les 20 premières majors dont la cotégories est différentes de Engineering
+  Trier les résultats dans l'ordre anti alphabétique
+*/
+
+select Major
+from recent_grads
+where Major_category != 'Engineering'
+order by Major desc
+limit 20;
