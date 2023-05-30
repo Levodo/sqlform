@@ -131,3 +131,39 @@ order by col1 asc, col2 asc;
   from recent_grads
   order by Major_category asc, Median desc 
   limit 20;
+
+/*Ecrire une requete qui récupère les 20 premières lignes de la table avec seulement les 
+  colonnes suivantes (dans l'ordre):
+  -College_jobs
+  -Median
+  -Unemployment_rate*/
+
+  select College_jobs, Median, Unemployment_rate
+  from recent_grads
+  limit 20;
+
+  /*
+  Utilisation de la boucle where pour filtrer les données
+  Ecrire une requete qui retourne les 5 premières lignes des majors Arts.
+    Afficher seulement la colonne Major.*/
+
+  select Major, Major_category
+  from recent_grads
+  where Major_category = 'Arts'
+  limit 5;
+
+/* Ajouter des critères avec des Opérateurs logiques
+
+    Retourner toutes les majors differentes de Engineering:
+      - Avec un salaire Median inférieur ou égal à 50000
+      - Ou avec un taux de personnes sans emploi supérieur à 6.5%
+      
+      Retourner les colonnes suivantes (dans l'ordre):
+      Major, Total, Median, Unemployment_rate
+      Sans limite de résultats
+*/
+
+  select Major, Total, Median, Unemployment_rate
+  from recent_grads
+  where (Major_category != 'Engineering') and (Median <= 50000 or Unemployment_rate > 0.065)
+  ;
