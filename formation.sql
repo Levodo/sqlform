@@ -179,3 +179,11 @@ from recent_grads
 where Major_category != 'Engineering'
 order by Major desc
 limit 20;
+
+select *
+from recent_grads;
+
+/*Une requete qui retourne toutes les valeurs de la colonne Major */
+
+select Major
+from recent_grads;
