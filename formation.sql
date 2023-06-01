@@ -187,3 +187,11 @@ from recent_grads;
 
 select Major, Major_category
 from recent_grads;
+
+/*
+Ecrire et exécuter une requete qui retourne tout les majors dans l'ordre alphabétique inverse
+dans la base jobs2.db
+*/
+select Major
+from recent_grads
+order by Major desc;
