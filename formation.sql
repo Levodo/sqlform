@@ -185,5 +185,5 @@ from recent_grads;
 
 /*Une requete qui retourne toutes les valeurs de la colonne Major */
 
-select Major
+select Major, Major_category
 from recent_grads;
