@@ -17,6 +17,6 @@ print(c.fetchall())
 
 
 
-# Calculer une estimation de la population en 2050
+
 
 
