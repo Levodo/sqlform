@@ -25,6 +25,7 @@ print(a)
 def pop_growth(x):
     return x["population"] * math.e ** ((x["population_growth"] / 100) * 35)
 
+# la méthode apply() de pandas permet d'appliquer une fonction sur chaque ligne ou colonne d'un dataframe
 
 a["pop_2050"] = a.apply(lambda row: pop_growth(row), axis=1)
 
@@ -36,3 +37,5 @@ b = a.sort_values(["pop_2050"], ascending=[False])
 b = b["name"].iloc[0:9]
 
 print(b)
+
+
