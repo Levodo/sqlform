@@ -11,3 +11,4 @@ a = pd.read_sql_query('select sum(area_land), sum(area_water) from facts where a
 
 
 print(a['sum(area_land)']/ a['sum(area_water)'])
+# après le calcul de ce ratio, nous pouvons donc conclure qu'il ya 28 plus de terre que de mer
