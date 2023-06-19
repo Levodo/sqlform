@@ -101,3 +101,72 @@ from facts
 select sum(area_land) from facts;
 
 select avg(area_water) from facts;
+
+/*Combiner plusieurs fonctions sur une unique requete */
+
+select birth_rate, death_rate, population_growth
+from facts;
+
+select count(*), sum(death_rate), avg(population_growth)
+from facts; 
+
+/*Objectifs :
+    Ecrire une requete qui calcule:
+        
+        - La moyenne de la colonne population
+        - La somme de la colonne population
+        - Le maximum de la colonne birth_rate
+
+    Travail à réaliser sur DB Browser puis sur Jupyter Notebook
+    
+    Afficher les 3 resultats que vous assignerez à 3 variables différentes
+*/
+
+select avg(population), sum(population), max(birth_rate) from facts;
+
+
+/*Associer les fonctions de calcul avec la condition where*/
+
+select count(*)
+from facts
+where population > 5000000
+;
+
+/*Objectifs:
+
+    Ecrire une requete SQL qui calcul la moyenne de la colonne population_growth pour les pays ayant une 
+    population supérieure à 10000000 d'habitants.
+
+    Travail à réaliser sur DB Browser puis sur Jupyter Notebook
+*/
+
+select avg(population_growth) from facts where population > 10000000;
+
+/* Sélectionner des éléments ou données uniques: DISTINCT*/
+
+select distinct name
+from table;
+
+select distinct name, population
+from table;
+
+select distinct birth_rate from facts;
+
+
+/*Associer les fonctions de calcul avec distinct*/
+
+select count(distinct birth_rate)
+from facts;
+
+select avg(distinct birth_rate)
+from facts;
+
+/*Objectifs : Associer les fonctions de calcul avec DISTINCT
+
+    - Trouver la moyenne des valeurs distinctes de la colonne birth_rate pour lesquelles population est 
+      plus grand que 20.000.000
+    - Trouver la somme de toutes les valeurs distinctes de la colonne population pour lesquelles area_land 
+      est plus grand que 1.000.000
+
+    Travail à réaliser sur DB Browser puis sur Jupyter Notebook
+*/
