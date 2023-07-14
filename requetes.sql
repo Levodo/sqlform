@@ -170,3 +170,64 @@ from facts;
 
     Travail à réaliser sur DB Browser puis sur Jupyter Notebook
 */
+
+select avg(distinct birth_rate) from facts where population > 20000000;
+
+select sum(distinct population) from facts where area_land > 1000000;
+
+/*Opérations mathématiques en SQL*/
+
+select population / 1000000
+from facts;
+
+/*Objectifs : 
+
+    - Afficher  les valeurs de la colonne population_growth en millions (décimales). 
+    
+      Travail à réaliser sur DB Browser puis sur Jupyter Notebook
+*/
+
+select population_growth / 1000000.0 from facts;
+
+
+/* Exécuter des opérations mathématiques entre colonne*/
+
+select birth_rate / death_rate
+from facts;
+
+select (birth_rate + migration_rate) / death_rate
+from facts;
+
+/* Objectifs:
+
+    - Ecrire une requete SQL qui calcule pour chaque pays le nombre d'habitants qu'il y'aura 
+      pour l'année suivante.
+
+      Travail à réaliser sur DB Browser puis sur Jupyter Notebook
+
+      Indice: Multiplier les colonnes population et population_growth pour avoir l'augmentation
+      sur un an et ajouter la colonne population au résultat.
+*/
+
+select name, population * (population_growth + 1) as next_year_population from facts;
+
+/* Calculer des statistiques en regroupants des éléments par niveau*/
+
+GROUP BY
+
+select sum(Employed) 
+from recent_grads
+group by Major_category
+;
+
+/* Objectifs:
+
+    Trouver le pourcentage moyen de femmes pour chaque catégorie de majors.
+    Vous afficherez les colonnes Major_category et le pourcentage moyen de femmes.
+    
+    Uniquement requete SQL à visualiser sur DB Browser
+*/
+
+select Major_category, AVG(ShareWomen)
+from recent_grads
+group by Major_category;
