@@ -231,3 +231,45 @@ group by Major_category
 select Major_category, AVG(ShareWomen)
 from recent_grads
 group by Major_category;
+
+/*Renommer les colonnes avec la commande as*/
+
+/*Objectifs :
+
+    Ecrire une requete qui affiche le total d'hommes et le total de femmes et modifie le nom des colonnes:
+    - pour les hommes: total_men
+    - pour les femmes: total_women
+    
+    Uniquement requete SQL à visualiser sur DB Browser.
+*/
+
+select sum(Men) as total_men, sum(Women) as total_women
+from recent_grads;
+
+/*Objectifs :
+    
+    Trouver pour chaque catégorie de major, le pourcentage de diplomé ayant un emploi.
+    Vous pourrez modifier le nom des colonnes si besoin.
+    
+    Indice: le pourcentage de diplomés ayant un emploi se calcule en divisant la moyenne des diplomés ayant un emploi
+    sur la moyenne totale des diplomés.
+*/
+
+select Major_category, avg(Employed) / avg(Total)* 100 as share_employed
+from recent_grads
+group by Major_category;
+
+/*Colonnes virtuelles et HAVING( HAVING nous permet de filtrer sur des colonnes virtuelles)
+
+reprenons le code ci-dessus et affichons par major_category les employés dans la colonne share_employed > 0.8*/
+
+select Major_category, avg(Employed) / avg(Total) as share_employed
+from recent_grads
+group by Major_category
+having share_employed > 0.8;
+
+/*Mission:
+
+    Trouver toutes les categories de major pour lesquelles la proportion de diplomés avec de faibles revenues
+    est supérieure à 0.1.
+*/
