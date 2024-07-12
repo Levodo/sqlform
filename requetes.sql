@@ -272,4 +272,53 @@ having share_employed > 0.8;
 
     Trouver toutes les categories de major pour lesquelles la proportion de diplomés avec de faibles revenues
     est supérieure à 0.1.
+
+Indices :
+
+    - Pour calculer la proportion de diplomés ayant de faibles revenus, c'est avg(Low_wage_job) / avg(Total)
+     que l'on peut renommer avec as en Low_wage_jobs.
+    - Vous devez utiliser group by sur la colonne Major_category.
+    - Utiliser la commande having pour restreindre les valeurs de la colonne crée à l'indice 1
 */
+
+SELECT Major_category, AVG(Low_wage_jobs) / AVG(Total) AS share_low_wage
+FROM recent_grads
+GROUP BY Major_category
+HAVING share_low_wage > 0.1
+;
+
+/*Arrondir les résultats avec la fonction ROUND*/
+
+select Major_category, ROUND(ShareWomen, 2) as rounded_share_women
+from recent_grads;
+
+
+SELECT Major_category, ROUND(AVG(Low_wage_jobs) / AVG(Total), 3) AS share_low_wage
+FROM recent_grads
+GROUP BY Major_category
+HAVING share_low_wage > 0.1
+;
+
+/*Mission :
+
+    Afficher le pourcentage des diplomés travaillant à temps plein (colonne Full_time).
+    Pour chaque catégorie de major, vous afficherez uniquement les résultats inférieur 
+    à 60%.
+*/
+
+select Major_category, ROUND(avg(Full_time) / avg(Total), 3) as share_degree_jobs
+from recent_grads
+group by Major_category
+having share_degree_jobs < 0.6
+;
+
+/*SESSION 2 : CALCUL DE MOYENNES
+    Calcul des moyennes des colonnes population, population_growth, birth_rate, et death_rate*/
+
+select avg(population), avg(population_growth), avg(birth_rate), avg(death_rate) from facts;
+
+/*Calculer les valeurs minimales et maximales des colonnes population, population_growth, birth_rate et death_rate*/
+
+select MIN(population), MIN(population_growth), MIN(birth_rate), MIN(death_rate) from facts;
+
+select MAX(population), MAX(population_growth), MAX(birth_rate), MAX(death_rate) from facts;
