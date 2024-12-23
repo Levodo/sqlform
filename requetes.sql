@@ -322,3 +322,38 @@ select avg(population), avg(population_growth), avg(birth_rate), avg(death_rate)
 select MIN(population), MIN(population_growth), MIN(birth_rate), MIN(death_rate) from facts;
 
 select MAX(population), MAX(population_growth), MAX(birth_rate), MAX(death_rate) from facts;
+
+
+/* Projet guidé 2
+        
+        Créations de la table cérémonies */
+
+insert into ceremonies (Years, Host)
+values (?, ?);
+
+insert into ceremonies(Years, Host)
+values (2010, "Steve Martin"),
+        (2009, "Hugh Jackman"),
+        (2008, "Jon Stewart"),
+        (2007, "Billen DeGeneres"),
+        (2006, " Jon Stewart"),
+        (2005, "Chris Rock"),
+        (2004, "Billy Chrystal"),
+        (2003, "Steve Martin"),
+        (2002, "Whoopi Goldberg"),
+        (2001, "Steve Martin"),
+        (2000, "Billy Chrystal");
+
+/* Contrainte de clé externe*/
+
+PREGMA foreign_keys = ON;
+
+
+/* Relation one-to-many avec la table nominations*/
+
+select nominations.Category, nominations.Nominee, nominations.Movie,
+moninations.Character, nominations.Won, ceremonies.id
+from nominations
+inner join ceremonies
+on nominations.Year == ceremonies.Year
+;
