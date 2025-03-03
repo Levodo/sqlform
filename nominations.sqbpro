@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Lenovo/Desktop/sqlform/nominations.db" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="984"/><column_width id="4" width="0"/></tab_structure><tab_browse><current_table name="0,0:"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">select nominations.Category, nominations.Nominee, nominations.Movie, nominations.Character, nominations.Won, ceremonies.id from nominations inner join ceremonies on nominations.Year == ceremonies.Year;</sql><sql name="SQL 2">select *
+from nominations
+limit 10;</sql><sql name="SQL 3">select *
+from nominations_two
+limit 10;</sql><sql name="SQL 4">select *
+from nominations_two
+order by ceremony_id desc
+limit 10;
+</sql><sql name="SQL 5">select *
+from nominations
+order by Year asc
+limit 10;</sql><current_tab id="4"/></tab_sql></sqlb_project>

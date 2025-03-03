@@ -345,15 +345,289 @@ values (2010, "Steve Martin"),
         (2000, "Billy Chrystal");
 
 /* Contrainte de clé externe*/
-
+/* Pour empecher de lier des données avec des clés externes et elle permet aussi a sqlite de bien s'assurer que la clé externe est bien reférencer dans une autre table*/
+/*En outre, pour éviter de lier des données avec des clés inexistantes.*/
+/*Après cette requete, si elle n'est pas reférencé dans une autre table, elle retourne un message d'érreur.*/
 PREGMA foreign_keys = ON;
 
 
 /* Relation one-to-many avec la table nominations*/
 
-select nominations.Category, nominations.Nominee, nominations.Movie,
-moninations.Character, nominations.Won, ceremonies.id
+select nominations.Category, nominations.Nominee, nominations.Movie, nominations.Character, nominations.Won, ceremonies.id from nominations inner join ceremonies on nominations.Year == ceremonies.Year;
+
+
+
+select *
 from nominations
-inner join ceremonies
-on nominations.Year == ceremonies.Year
-;
+limit 10;
+
+select *
+from nominations_two
+order by ceremony_id desc
+limit 10;
+
+
+select *
+from nominations
+order by Year asc
+limit 10;
+
+/* Supprimer et renommer des tables*/
+
+drop table nominations;
+
+alter table nom_table_à_renommer
+rename to nouveau_nom_table;
+
+
+alter table nominations_two rename to nominations;
+
+/* Créer une join table qui va lier la table movies et actors*/
+
+create table movies_actors (
+    id interger primary key,
+    movie_id integer references movies(id),
+    actor_id integer references actors(id)
+);
+
+/*Exécuter des requetes SQL sur psql*/
+
+create database db_nom; /*Si on oublie le ; sur psql ça nous ramène à la ligne*/
+
+/*Commandes spéciales postgreSQL
+
+    *\l: liste des commandes données, à savoir: nom bd, encodage etc..begin
+    *\du: liste les roles de la bd sur laquelle nous nous trouvons.
+    *\dt: liste les tables présente dans une bd
+    *\q: permet de fermer la bd et de la quiter.
+    *\dp: liste les droits d'accès des utilisateurs 
+    end;
+*/
+
+/* Changer de base de données.
+    pour se connecter à une autre bd différente de celle par défaut, il suffit d'entrer le
+    nom de la bd avec laquelle on souhaite se connecter.
+
+    connectons nous, à notre bd bank_account, ensuite, créons une table deposits et des 
+    colonnes(id,name et amount)
+*/
+
+/* Créer des utilisateurs. la commande est la suivante:*/
+
+CREATE ROLE userName; /*Dans ce cas, l'utilisateur ne peut se connecter,ni effectuer des 
+actions, pour y remédier, il va falloir créer un nouvel utilisateur et ajouter le login. L'on
+peut aussi ajouter un mot de passe et d'autres compétences.*/
+
+CREATE ROLE sql WITH CREATEDB CREATEROLE SUPERUSER LOGIN PASSWORD 'password';
+
+/* Ajouter des permissions*/
+
+GRANT SELECT, INSERT, UPDATE ON nom_table TO nom_utilisateur;
+
+/* Il existe une commande permettant de donner tout les droits à un utilisateur.*/
+
+GRANT ALL PRIVILEGES ON nom_table TO nom_utilisateur;
+
+/*Retirer des permissions*/
+
+REVOKE SELECT, UPDATE, INSERT, DELETE ON nom_table FROM nom_utilisateur;
+
+/*On peut aussi supprimer tout les droits à l'aide d'une seule requete:*/
+
+REVOKE ALL PRIVILEGES ON nom_table FROM nom_utilisateur;
+
+/*Superusers*/
+
+CREATE ROLE nom_utilisateur WITH SUPERUSER;
+
+/*Supprimer un utilisateur, une table ou une base de données*/
+
+DROP ROLE nom_utilisateur;
+
+
+/*Utilisation de Postgresql avec Python*/
+
+import psycopg2
+
+connexion = psycopg2.connect(dbname="postgres", user="postgres")
+cursor = connexion.cursor()
+cursor.execute("create table notes(id integer primary key, body text, title text);")
+connexion.close()
+
+/* Créer une table*/
+
+CREATE TABLE nom_table(
+    cil1 datatype integer primary key,
+    col2 datatype2,
+    col3 datatype3,
+    ...
+);
+
+/*Transactions en SQL*/
+
+CREATE TABLE accounts(
+    id integer PRIMARY KEY,
+    name text,
+    balance float
+);
+/*Supposons que nous avons Léo qui a 100 euros,Léa qui en a 200. Léa donne 100 euros a Léo.
+Modélisons ceci avec des requetes sql.*/
+
+UPDATE accounts SET balance=200 WHERE name="Léo";
+
+UPDATE accounts SET balance=100 WHERE name="Léa";
+/*A savoir, lors de l'exécution de ces 2 requetes, la première aurait fonctionné et pas la 2eme,
+car, il est impossible sur Postgresql de faire 2 transactions à la fois. Dans ce cas, léo
+aurait 200 euros, léa aussi aurait conserver ses 200 euros et la banque aurait perdu 100 euros, 
+ce qui n'est pas du tout envisageable.
+Afin de résoudre ce problème, nous devons appliquer le phénomène de transactions similaires 
+avec la méthode commit()*/
+
+
+/*Créer des bases de données*/
+
+CREATE DATABASE db_nom;
+    /*On peut rajouter un propriétaire de la base de données.*/
+    CREATE DATABASE db_name OWNER nom_proprio;
+
+/*Supprimer des bases de données.*/
+
+DROP DATABASE nom_db; /*SSI l'utilisateur en a la permission.*/
+
+
+/* Exploration avec DISTINCT, COUNT, GROUP BY*/
+
+    /*Missions:
+        
+        -Nous voulons connaitre les différentes notes unique(colonne rating) des Etats-Unis
+        (PG, PG-13, R, etc...) présente dans la table film.
+        
+        - Nous souhaitons aussi connaitre les différents taux de location (colonne rental_rate)
+        présent dans la table film.
+        
+        - Compter le nombre des différents rating et rental_rate.*/
+
+/*Solutions :*/
+
+select distinct rating
+from film;
+
+select distinct rental_rate
+from film;
+
+select rating, count(rating)
+from film
+group by rating
+order by rating desc;
+
+
+select rental_rate, count(rental_rate)
+from film
+group by rental_rate
+order by rental_rate desc;
+
+
+/*Commande EXTRACT*/
+
+Extract(MONTH FROM colonne), Extract(YEAR from colonne)
+
+    /*Tout d'abord, nous allons grouper le nombre de location par mois.*/
+
+    select rental_date, count(rental_id) as Total_rentals
+    from rental 
+    group by rental_date
+    order by Total_rentals desc;
+
+    /*Nous utiliserons donc la commande extract pour calculer le nombre de loc par année et mois.*/
+
+    select extract(YEAR from rental_date), extract(MONTH from rental_date), count(rental_id) as Total_rentals
+    from rental
+    group by 1,2;
+
+    /* On peut aussi déterminer la moyenne de location par location unique grace à la requete svte:*/
+
+    select extract(YEAR from rental_date), extract(MONTH from rental_date), count(rental_id) as Total_rentals,
+count(distinct customer_id) as unique_rental, 1.0 * count(rental_id) / count(distinct customer_id) as average
+	from rental
+	group by 1,2;
+
+
+/** Exploration avec WHERE **/
+
+         /* Mission :*/
+    /*- Je viens d'ajouter à la liste de films présents dans le magasin un nouveau film qui
+    pourrait plaire à 'Gloria Cook', Pouvez-vous me donner son email afin que je lui envoie 
+    un message?
+    
+    - On m'a parlé d'un film qui se nomme 'Texas Watch' et j'aimerai savoir si ça peut me
+    plaire. Pouvez-vous me fournir une description de ce film?
+    
+    -Un client est en retard pour rendre son film loué la semaine dernière, nous avons noté
+    son adresse qui est '270 Toulon Boulevard'. Pouvez-vous trouver son numéro de téléphone
+    qu'on le prévienne?*/
+
+    select email
+    from customer
+    where first_name ='Gloria' and last_name ='Cook';
+
+    select description
+    from film
+    where title = 'Texas Watch';
+
+    select phone 
+    from address
+    where address = '270 Toulon Boulevard';
+
+
+/* Commande IN : Elle peut servir à rechercher une valeur dans une liste de valeur ou dans une
+sous requete.*/
+
+where colonne in (valeur1, valeur2, ...)
+where colonne1 in (select colonne2 from table)
+
+select customer_id, rental_id, return_date 
+from rental
+where customer_id in (1,2)
+order by return_date desc;
+
+/* Commande LIKE: Elle permet généralement de donner des données dont on ne connait pas 
+généralement la syntaxe. */
+
+select colonne1, colonne2, ...
+from nom_table
+where colonne1 like 'Jen%';
+
+    /* Missions :
+    
+        - Compter le nombre d'acteurs dont le nom de famille commence par P.
+        
+        - Compter le nombre de films qui contiennent Truman dans leur titre.
+        
+        - Quel est le client qui a le plus grand Customer ID et dont le prénom commence par 'E'
+        et a un Adress ID inférieur à 500? */
+
+    select count(actor_id) as nombre_actors
+    from actor 
+    where last_name like 'P%';
+
+
+    select count(title) as nombre_films
+    from film
+    where title like '%Truman%';
+
+    select first_name, last_name
+    from customer
+    where first_name like 'E%' and address_id < 500
+    order by customer_id desc
+    limit 1;
+
+/*Challenge GROUP BY 
+
+    - Nous avons 2 équipes différentes qu'on appelle staff_id 1 et staff_id 2. Nous 
+    souhaitons donner un bonus à l'équipe qui a obtenu le plus de paiements.
+    
+    - Combien de paiements a réalisé chaque équipe et pour quel montant?
+*/
+
+select staff_id, count(payment_id) 
+
