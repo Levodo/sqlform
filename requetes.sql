@@ -622,12 +622,80 @@ where colonne1 like 'Jen%';
     limit 1;
 
 /*Challenge GROUP BY 
-
+      Mission 1:
     - Nous avons 2 équipes différentes qu'on appelle staff_id 1 et staff_id 2. Nous 
     souhaitons donner un bonus à l'équipe qui a obtenu le plus de paiements.
     
     - Combien de paiements a réalisé chaque équipe et pour quel montant?
 */
 
-select staff_id, count(payment_id) 
+select staff_id, count(amount), sum(amount)
+from payment
+group by staff_id;
 
+
+    /*Mission 2: 
+        -Un cabinet d'audit est en train d'auditer notre magasin et souhaiterait connaitre
+         le cout moyen de remplacement(colonne replacement_cost)
+          des films par lettre de notation (colonne reting. ex: R, PG, etc...)*/
+
+          select rating, ROUND(avg(replacement_cost),2) as cout_moyen
+          from film
+          group by rating;
+
+    /* Mission 3:
+        -Nous voulons distribuer des coupons à nos 5 clients qui ont dépensé le plus
+         d'argent dans notre magasin.
+         -Obtenez les IDs de ces 5 personnes.*/
+
+           select customer_id, sum(amount) as Total_argent
+           from payment
+           group by customer_id
+           order by Total_argent desc
+           limit 5;
+         
+
+/* Challenge HAVING : Having a pour role de filtrer les données sauf qu'à la différence de 
+WHERE, elle s'applique à des colonnes virtuelles, un peu comme avg ci-dessous, qui a été
+créé pendant l'exécution de la requete et s'utilise après le Group by.*/
+
+       select rating, avg(rental_rate)
+       from film
+       where rating in('R', 'G', 'PG')
+       group by rating 
+       having avg(rental_rate) > 3;
+        
+
+        /*Mission 1:*
+        
+            - Nous souhaitons distribuer une carte de paiement avantageuse pour nos meilleurs
+            clients. Sont éligibles à cette carte les clients qui totalisent au moins 30
+            transactions de paiement (table payment).
+            
+            - Quels clients sont donc éligibles? (vous fournirez leurs IDs)   */
+
+            select customer_id, count(amount)
+            from payment
+            group by customer_id
+            having count(amount) > 30;
+
+        /*Mission 2:
+        
+            - Obtenir les notations (R, PG, etc...) dont la durée de location moyenne est 
+            supérieure à 5 jours.*/
+
+            select rating, avg(rental_duration)
+            from film
+            group by rating
+            having avg(rental_duration) > 5;
+
+        /*Mission 3:
+        
+            - Obtenir les IDs des clients qui ont payés plus de 110$ à l'équipe staff 2 (table
+            payment).*/
+
+            select customer_id, sum(amount)
+            from payment
+            where staff_id = 2
+            group by customer_id
+            having sum(amount) > 110;
