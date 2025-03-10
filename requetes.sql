@@ -699,3 +699,90 @@ créé pendant l'exécution de la requete et s'utilise après le Group by.*/
             where staff_id = 2
             group by customer_id
             having sum(amount) > 110;
+
+
+/* Les Jointures: JOINS
+
+        Il serait intéressant d'obtenir les données d'un client, en fonction de dépenses,
+         mais aussi à l'aide de ses infos personnelles, à savoir prénom, nom et adresse mail.
+         Cela se jouera donc entre les tables payment et customer. */
+
+
+         select customer.customer_id, first_name, last_name, email, amount, payment_date
+         from customer
+         inner join payment on payment.customer_id = customer.customer_id;
+
+       /*En outre, j'aurais pu faire comme ceci:*/
+
+         select  payment.customer_id, amount, payment_date, customer.first_name, customer.last_name, customer.email
+         from payment
+         inner join customer on customer.customer_id = payment.customer_id;
+         /*On peut tout aussi rajouter des conditions avec where*/
+
+         /* Exemple INNER JOIN*/
+
+            /*Jointure entre la table inventory et film*/
+
+            select store_id, title
+            from inventory
+            inner join film on inventory.film_id = film.film_id;
+
+            /* Le but est maintenant de compter les titres de film par store_id*/
+
+            select store_id, title, count(title) as number_as_store
+            from film
+            inner join inventory on film.film_id = inventory.film_id
+            group by store_id, title
+            order by title;
+
+            /* Afin de connaitre la langue pour chaque film, nous ferons une jointure 
+            entre la table film et language*/
+
+            select title, name 
+            from film
+            inner join language on film.language_id = language.language_id;
+
+/* Exemples OUTER JOIN.
+
+        La commande LEFT OUTER JOIN permet de selectionner toutes les lignes de la
+        table de gauche(juste après le from), qui lie ou pas des correspondance
+         avec la table de droite(celle qui vient directement après LEFT OUTER JOIN).
+         
+         S'il y'a une correspondance entre les deux tables, très bien, ça affiche
+         les valeurs de la colonne de droite, si non ça affiche la valeur NULL. */
+
+            /*Exemple entre la table film et inventory.*/
+
+            select f.film_id, title, inventory_id, store_id
+            from film as f 
+            left outer join inventory as i on f.film_id = i.film_id
+            where inventory_id is null
+            order by f.film_id;
+
+/*Challenge JOIN*/
+
+        /* Challenge:
+            
+            - Afficher la liste de tous les films accompagnés de la catégorie de films
+              auxquelle ils appartient ainsi que la langue du film.*/
+
+              select title, c.name as Category, l.name as Movie_language 
+              from film as f 
+              inner join film_category as fc on f.film_id = fc.film_id
+              inner join Category as c on c.category_id = fc.category_id
+              inner join language as l on l.language_id = f.language_id;
+
+
+/* Challenge Marketing 1: Trouver les films qui rapportent le plus.*/
+
+    /*Challenge Marketing 1: Trouver les films qui rapportent le plus
+    
+        - Aficher tous les films avec leur nombre de location et les revenus que chaque
+        film a généré. 
+        
+        -Tables utiles: rental pour le nombre de locations et film pour le prix par 
+        location de chaque film.
+        
+        - Indice : revenu par film = prix de location * nombre de location par film.*/
+
+              
