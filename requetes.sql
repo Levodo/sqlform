@@ -745,7 +745,7 @@ créé pendant l'exécution de la requete et s'utilise après le Group by.*/
 /* Exemples OUTER JOIN.
 
         La commande LEFT OUTER JOIN permet de selectionner toutes les lignes de la
-        table de gauche(juste après le from), qui lie ou pas des correspondance
+        table de gauche(juste après le from), qui lie ou pas des correspondances
          avec la table de droite(celle qui vient directement après LEFT OUTER JOIN).
          
          S'il y'a une correspondance entre les deux tables, très bien, ça affiche
@@ -785,4 +785,53 @@ créé pendant l'exécution de la requete et s'utilise après le Group by.*/
         
         - Indice : revenu par film = prix de location * nombre de location par film.*/
 
-              
+        select f.title, count(rental_id) as number_of_rentals, count(rental_id) * rental_rate as revenue
+        from film as f 
+        inner join inventory as i on f.film_id = i.film_id
+        inner join rental as r on r.inventory_id = i.inventory_id
+        group by f.title, rental_rate
+        order by revenue desc;
+        
+    /*Challenge Marketing 2: Quel est le magasin qui a vendu le plus (Store 1 ou Store 2??)
+    
+            - Afficher le total de ventes de chaque magasin (store_id).
+            - Indice: montant de la colonne amount de la table payment
+    */  
+
+        select store_id, sum(p.amount) as revenue
+        from inventory as i
+        inner join rental as r on i.inventory_id = r.inventory_id
+        inner join payment as p on p.rental_id = r.rental_id
+        group by store_id
+        order by revenue desc;
+
+    /*Challenge Marketing 3: Combien y a-t-il de locations pour  les films d'actions, pour
+      les comédies et pour les films d'animation?
+      
+            - Category: Action, Comedy, Animation
+            - Afficher le total des locations à coté des 3 types de film ci-dessous.
+    */
+
+        select c.name as Catégorie, count(r.rental_id) as Total_locations
+        from category as c
+        inner join film_category as fc on c.category_id = fc.category_id
+        inner join film as f on fc.film_id = f.film_id
+        inner join inventory as i on i.film_id = f.film_id
+        inner join rental as r on r.inventory_id = i.inventory_id
+        where c.name in ('Action', 'Comedy', 'Animation')
+        group by c.name;
+
+
+    /*Challenge Marketing 4: Envoyer une offre promotionnelle à tous les clients qui ont
+      loué au moins 40 films
+      
+            - Afficher les emails des clients qui ont loué plus de 40 films pour les 
+            contacter.
+    */  
+
+         select email, count(r.rental_id) as Total_locations
+         from customer as c
+         inner join rental as r on c.customer_id = r.customer_id
+         group by email
+         having count(r.rental_id) >= 40
+         order by Total_locations desc;      
